@@ -101,35 +101,19 @@ export class FetchTokensCronService {
 
       const result = (await response.json()) as GraphQLResponse;
 
-      if (
-        !result.data?.tokenCreateds ||
-        result.data.tokenCreateds.length === 0
-      ) {
-        this.logger.debug("No new tokens found");
-        return null;
-      }
-
-      // Process tokens here
-      const tokenCount = result.data.tokenCreateds.length;
-      this.logger.log(`Successfully fetched ${tokenCount} tokens`);
-
-      result.data.tokenCreateds.forEach((token) => {
-        this.logger.debug(
-          `Token: ${token.name} (${token.ticker}), Owner: ${token.owner}`
-        );
-      });
+      const tokens = result.data?.tokenCreateds || [];
 
       // If we got new tokens, update the last checked block
-      if (result.data.tokenCreateds.length > 0) {
+      if (tokens.length > 0) {
         // Find the highest block number among fetched tokens
         const highestBlockNumber = Math.max(
-          ...result.data.tokenCreateds.map((t) => parseInt(t.blockNumber))
+          ...tokens.map((t) => parseInt(t.blockNumber))
         ).toString();
 
         await this.updateLastCheckedBlock(highestBlockNumber);
       }
 
-      return result.data.tokenCreateds;
+      return tokens;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
