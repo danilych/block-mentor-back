@@ -30,6 +30,16 @@ interface AppConfig {
   graphQl: string;
 }
 
+// Type for database insertion
+interface DbToken {
+  blockTimestamp: string;
+  initialAmount: string;
+  name: string;
+  ticker: string;
+  owner: string;
+  token_address: string;
+}
+
 @Injectable()
 export class FetchTokensCronService {
   private readonly logger = new Logger(FetchTokensCronService.name);
@@ -42,6 +52,7 @@ export class FetchTokensCronService {
     const config = this.configService.get<AppConfig>("app");
     this.graphQlEndpoint = config?.graphQl || "";
   }
+
   private async getLastCheckedBlockNumber(): Promise<string> {
     try {
       // Query the last checked block for token fetching
@@ -58,13 +69,16 @@ export class FetchTokensCronService {
         return result[0].blockNumber;
       }
 
-      // If no record exists, return a default value
-      this.logger.debug("No last checked block found, using default value: 10");
-      return "10";
+      await this.db.insert(schema.lastCheckedBlocks).values({
+        type: "TOKENS_FETCH",
+        blockNumber: "0",
+      });
+
+      return "0";
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to get last checked block: ${errorMessage}`);
+      throw new Error(`Error getting last checked block: ${errorMessage}`);
     }
   }
 
@@ -78,17 +92,17 @@ export class FetchTokensCronService {
 
       const query = `
         query MyQuery {
-          tokenCreateds(block: {number_gte: ${lastBlockNumber}}) {
-            blockNumber
-            blockTimestamp
-            initialAmount
-            name
-            owner
-            ticker
-            token
-            transactionHash
+          tokenCreateds(where: {blockNumber_gt: ${lastBlockNumber}}) {
+          blockNumber
+          blockTimestamp
+          initialAmount
+          name
+          owner
+          ticker
+          token
+          transactionHash
           }
-        }
+      }
       `;
 
       const response = await fetch(this.graphQlEndpoint, {
@@ -100,20 +114,45 @@ export class FetchTokensCronService {
       });
 
       const result = (await response.json()) as GraphQLResponse;
+      const fetchedTokens = result.data?.tokenCreateds || [];
 
-      const tokens = result.data?.tokenCreateds || [];
-
-      // If we got new tokens, update the last checked block
-      if (tokens.length > 0) {
-        // Find the highest block number among fetched tokens
-        const highestBlockNumber = Math.max(
-          ...tokens.map((t) => parseInt(t.blockNumber))
-        ).toString();
-
-        await this.updateLastCheckedBlock(highestBlockNumber);
+      if (fetchedTokens.length === 0) {
+        this.logger.debug("No new tokens found");
+        return null;
       }
 
-      return tokens;
+      // Process tokens here
+      this.logger.log(`Successfully fetched ${fetchedTokens.length} tokens`);
+
+      // Map GraphQL tokens to database schema format
+      const tokensForDb: DbToken[] = fetchedTokens.map((token) => ({
+        blockTimestamp: token.blockTimestamp,
+        initialAmount: token.initialAmount,
+        name: token.name,
+        ticker: token.ticker,
+        owner: token.owner.toLowerCase(),
+        token_address: token.token.toLowerCase(),
+      }));
+
+      // If we got new tokens, update the last checked block
+      if (fetchedTokens.length > 0) {
+        // Find the highest block number among fetched tokens
+        const latestBlock = Math.max(
+          ...fetchedTokens.map((w) => {
+            return parseInt(w.blockNumber);
+          })
+        );
+
+        await this.updateLastCheckedBlock(latestBlock.toString());
+      }
+
+      // Save tokens to database
+      if (tokensForDb.length > 0) {
+        this.logger.debug(`Saving ${tokensForDb.length} tokens to database`);
+        await this.db.insert(schema.createdTokens).values(tokensForDb);
+      }
+
+      return fetchedTokens;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
