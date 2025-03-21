@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Query } from "@nestjs/common";
 import { OpenAiService } from "./openai.service";
 
 @Controller('chat')
@@ -9,7 +9,7 @@ export class OpenAiController {
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  async getOpenAiChat() {
-    return await this.openAiChat.chat('hello mate');
+  async getOpenAiChat(@Query() query: {text:string}) {
+    return await this.openAiChat.chat(query.text);
   }
 }

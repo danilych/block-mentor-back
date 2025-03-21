@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { json, urlencoded } from 'express';
@@ -14,6 +14,7 @@ async function bootstrap() {
   app.use(
     urlencoded({ extended: true, limit: '64mb', parameterLimit: 10_000 }),
   );
+  app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(ConfigService);
   const config = configService.get<IAppConfig>(configNames.APP);
