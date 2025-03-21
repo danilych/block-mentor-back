@@ -92,17 +92,17 @@ export class FetchTokensCronService {
 
       const query = `
         query MyQuery {
-  tokenCreateds(where: {blockNumber_gt: ${lastBlockNumber}}) {
-    blockNumber
-    blockTimestamp
-    initialAmount
-    name
-    owner
-    ticker
-    token
-    transactionHash
-  }
-}
+          tokenCreateds(where: {blockNumber_gt: ${lastBlockNumber}}) {
+          blockNumber
+          blockTimestamp
+          initialAmount
+          name
+          owner
+          ticker
+          token
+          transactionHash
+          }
+      }
       `;
 
       const response = await fetch(this.graphQlEndpoint, {
@@ -130,8 +130,8 @@ export class FetchTokensCronService {
         initialAmount: token.initialAmount,
         name: token.name,
         ticker: token.ticker,
-        owner: token.owner,
-        token_address: token.token,
+        owner: token.owner.toLowerCase(),
+        token_address: token.token.toLowerCase(),
       }));
 
       // If we got new tokens, update the last checked block
