@@ -53,11 +53,6 @@ export class FetchTokensCronService {
     this.graphQlEndpoint = config?.graphQl || "";
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  dummyCron() {
-    this.logger.log("Dummy cron executed");
-  }
-
   private async getLastCheckedBlockNumber(): Promise<string> {
     try {
       // Query the last checked block for token fetching
@@ -142,11 +137,13 @@ export class FetchTokensCronService {
       // If we got new tokens, update the last checked block
       if (fetchedTokens.length > 0) {
         // Find the highest block number among fetched tokens
-        const highestBlockNumber = Math.max(
-          ...fetchedTokens.map((t) => parseInt(t.blockNumber)),
-        ).toString();
+        const latestBlock = Math.max(
+          ...fetchedTokens.map((w) => {
+            return parseInt(w.blockNumber);
+          }),
+        );
         
-        await this.updateLastCheckedBlock(highestBlockNumber);
+        await this.updateLastCheckedBlock(latestBlock.toString());
       }
 
       // Save tokens to database
