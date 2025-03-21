@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
+import { Stream } from 'openai/streaming';
 import { IAppConfig } from 'src/common/config/appConfig';
 import { configNames } from 'src/common/constants/configNames';
 
@@ -16,14 +17,15 @@ export class OpenAiService {
     this.openai = new OpenAI({ apiKey: this.appConfig.openAi });
   }
 
-  async chat(prompt: string): Promise<string> {
-    const completion = await this.openai.chat.completions.create({
+  async chat(prompt: string): Promise<Stream<OpenAI.Chat.Completions.ChatCompletionChunk>> {
+    const stream = await this.openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{
           role: "user",
           content: prompt,
       }],
+      stream: true
   });
-    return completion.choices[0].message.content as string;
+    return stream;
   }
 }
