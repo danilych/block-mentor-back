@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import { CronModule } from './modules/cron/cron.module';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(CronModule);
+  const app = await NestFactory.create(AppModule);
   await app.listen(process.env.port ?? 3000);
 }
 bootstrap();
