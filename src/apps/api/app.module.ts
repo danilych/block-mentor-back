@@ -17,7 +17,7 @@ import { OpenAiModule } from './modules/openai/openai.module';
     }),
     OpenAiModule,
     MessagesModule,
-    ChatModule
+    ChatModule,
   ],
 })
 export class AppModule {}
