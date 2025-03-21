@@ -17,11 +17,13 @@ export class OpenAiService {
   }
 
   async chat(prompt: string): Promise<string> {
-    const response = await this.openai.completions.create({
-      model: 'gpt-4',
-      prompt,
-      max_tokens: 150,
-    });
-    return response.choices[0].text.trim();
+    const completion = await this.openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{
+          role: "user",
+          content: "Write a one-sentence bedtime story about a unicorn.",
+      }],
+  });
+    return completion.choices[0].message.content as string;
   }
 }
