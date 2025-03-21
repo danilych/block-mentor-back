@@ -68,14 +68,9 @@ export class FetchTokensCronService {
         );
         return result[0].blockNumber;
       }
-
-      // If no record exists, return a default value
-      this.logger.debug("No last checked block found, using default value: 10");
-      return "10";
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error getting last checked block: ${errorMessage}`);
-      return "10"; // Default fallback
+      throw new Error(`Error getting last checked block: ${errorMessage}`);
     }
   }
 
