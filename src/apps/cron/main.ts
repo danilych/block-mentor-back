@@ -10,6 +10,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const config = configService.getOrThrow<IAppConfig>(configNames.APP);
 
-  await app.listen(+config.port + 3);
+  await app.listen(+config.port + 2);
 }
 bootstrap();

@@ -47,7 +47,7 @@ export class FetchTokensCronService {
 
   constructor(
     private configService: ConfigService,
-    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>,
+    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>
   ) {
     const config = this.configService.get<AppConfig>("app");
     this.graphQlEndpoint = config?.graphQl || "";
@@ -64,12 +64,20 @@ export class FetchTokensCronService {
 
       if (result.length > 0) {
         this.logger.debug(
-          `Found last checked block number: ${result[0].blockNumber}`,
+          `Found last checked block number: ${result[0].blockNumber}`
         );
         return result[0].blockNumber;
       }
+
+      await this.db.insert(schema.lastCheckedBlocks).values({
+        type: "TOKENS_FETCH",
+        blockNumber: "0",
+      });
+
+      return "0";
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       throw new Error(`Error getting last checked block: ${errorMessage}`);
     }
   }
@@ -81,24 +89,21 @@ export class FetchTokensCronService {
     try {
       // Get the last checked block number
       const lastBlockNumber = await this.getLastCheckedBlockNumber();
-      
+
       const query = `
         query MyQuery {
-          tokenCreateds(block: {number_gte: ${lastBlockNumber}}) {
-            blockNumber
-            blockTimestamp
-            initialAmount
-            name
-            owner
-            ticker
-            token
-            transactionHash
-          }
-        }
+  tokenCreateds(where: {blockNumber_gt: ${lastBlockNumber}}) {
+    blockNumber
+    blockTimestamp
+    initialAmount
+    name
+    owner
+    ticker
+    token
+    transactionHash
+  }
+}
       `;
-
-      this.logger.debug(`GraphQL endpoint: ${this.graphQlEndpoint}`);
-      this.logger.debug(`Querying tokens from block: ${lastBlockNumber}`);
 
       const response = await fetch(this.graphQlEndpoint, {
         method: "POST",
@@ -118,7 +123,7 @@ export class FetchTokensCronService {
 
       // Process tokens here
       this.logger.log(`Successfully fetched ${fetchedTokens.length} tokens`);
-      
+
       // Map GraphQL tokens to database schema format
       const tokensForDb: DbToken[] = fetchedTokens.map((token) => ({
         blockTimestamp: token.blockTimestamp,
@@ -135,9 +140,9 @@ export class FetchTokensCronService {
         const latestBlock = Math.max(
           ...fetchedTokens.map((w) => {
             return parseInt(w.blockNumber);
-          }),
+          })
         );
-        
+
         await this.updateLastCheckedBlock(latestBlock.toString());
       }
 
@@ -149,7 +154,7 @@ export class FetchTokensCronService {
 
       return fetchedTokens;
     } catch (error) {
-      const errorMessage = 
+      const errorMessage =
         error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to fetch tokens: ${errorMessage}`);
       return null;
@@ -164,7 +169,7 @@ export class FetchTokensCronService {
         .set({ blockNumber })
         .where(eq(schema.lastCheckedBlocks.type, "TOKENS_FETCH"))
         .returning();
-      
+
       // If no record was updated, insert a new one
       if (updateResult.length === 0) {
         await this.db.insert(schema.lastCheckedBlocks).values({
@@ -172,13 +177,14 @@ export class FetchTokensCronService {
           blockNumber,
         });
         this.logger.debug(
-          `Created new last checked block record: ${blockNumber}`,
+          `Created new last checked block record: ${blockNumber}`
         );
       } else {
         this.logger.debug(`Updated last checked block to: ${blockNumber}`);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to update last checked block: ${errorMessage}`);
     }
   }
