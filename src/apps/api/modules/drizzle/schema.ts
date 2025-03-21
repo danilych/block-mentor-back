@@ -15,3 +15,13 @@ export const lastCheckedBlocks = pgTable("last_checked_blocks", {
   type: lastCheckedBlockType(),
   blockNumber: text("block_number").notNull(),
 });
+
+export const createdTokens = pgTable("created_tokens", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  blockTimestamp: text("block_timestamp").notNull(),
+  initialAmount: text("initial_amount").notNull(),
+  name: text("name").notNull(),
+  ticker: text("ticker").notNull(),
+  owner: text("owner").notNull(),
+  token_address: text("token").notNull(),
+});

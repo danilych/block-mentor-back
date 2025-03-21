@@ -30,6 +30,16 @@ interface AppConfig {
   graphQl: string;
 }
 
+// Type for database insertion
+interface DbToken {
+  blockTimestamp: string;
+  initialAmount: string;
+  name: string;
+  ticker: string;
+  owner: string;
+  token_address: string;
+}
+
 @Injectable()
 export class FetchTokensCronService {
   private readonly logger = new Logger(FetchTokensCronService.name);
@@ -37,11 +47,17 @@ export class FetchTokensCronService {
 
   constructor(
     private configService: ConfigService,
-    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>
+    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>,
   ) {
     const config = this.configService.get<AppConfig>("app");
     this.graphQlEndpoint = config?.graphQl || "";
   }
+
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  dummyCron() {
+    this.logger.log("Dummy cron executed");
+  }
+
   private async getLastCheckedBlockNumber(): Promise<string> {
     try {
       // Query the last checked block for token fetching
@@ -53,7 +69,7 @@ export class FetchTokensCronService {
 
       if (result.length > 0) {
         this.logger.debug(
-          `Found last checked block number: ${result[0].blockNumber}`
+          `Found last checked block number: ${result[0].blockNumber}`,
         );
         return result[0].blockNumber;
       }
@@ -62,9 +78,9 @@ export class FetchTokensCronService {
       this.logger.debug("No last checked block found, using default value: 10");
       return "10";
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to get last checked block: ${errorMessage}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Error getting last checked block: ${errorMessage}`);
+      return "10"; // Default fallback
     }
   }
 
@@ -75,7 +91,7 @@ export class FetchTokensCronService {
     try {
       // Get the last checked block number
       const lastBlockNumber = await this.getLastCheckedBlockNumber();
-
+      
       const query = `
         query MyQuery {
           tokenCreateds(block: {number_gte: ${lastBlockNumber}}) {
@@ -91,6 +107,9 @@ export class FetchTokensCronService {
         }
       `;
 
+      this.logger.debug(`GraphQL endpoint: ${this.graphQlEndpoint}`);
+      this.logger.debug(`Querying tokens from block: ${lastBlockNumber}`);
+
       const response = await fetch(this.graphQlEndpoint, {
         method: "POST",
         headers: {
@@ -100,22 +119,45 @@ export class FetchTokensCronService {
       });
 
       const result = (await response.json()) as GraphQLResponse;
+      const fetchedTokens = result.data?.tokenCreateds || [];
 
-      const tokens = result.data?.tokenCreateds || [];
+      if (fetchedTokens.length === 0) {
+        this.logger.debug("No new tokens found");
+        return null;
+      }
+
+      // Process tokens here
+      this.logger.log(`Successfully fetched ${fetchedTokens.length} tokens`);
+      
+      // Map GraphQL tokens to database schema format
+      const tokensForDb: DbToken[] = fetchedTokens.map((token) => ({
+        blockTimestamp: token.blockTimestamp,
+        initialAmount: token.initialAmount,
+        name: token.name,
+        ticker: token.ticker,
+        owner: token.owner,
+        token_address: token.token,
+      }));
 
       // If we got new tokens, update the last checked block
-      if (tokens.length > 0) {
+      if (fetchedTokens.length > 0) {
         // Find the highest block number among fetched tokens
         const highestBlockNumber = Math.max(
-          ...tokens.map((t) => parseInt(t.blockNumber))
+          ...fetchedTokens.map((t) => parseInt(t.blockNumber)),
         ).toString();
-
+        
         await this.updateLastCheckedBlock(highestBlockNumber);
       }
 
-      return tokens;
+      // Save tokens to database
+      if (tokensForDb.length > 0) {
+        this.logger.debug(`Saving ${tokensForDb.length} tokens to database`);
+        await this.db.insert(schema.createdTokens).values(tokensForDb);
+      }
+
+      return fetchedTokens;
     } catch (error) {
-      const errorMessage =
+      const errorMessage = 
         error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to fetch tokens: ${errorMessage}`);
       return null;
@@ -130,7 +172,7 @@ export class FetchTokensCronService {
         .set({ blockNumber })
         .where(eq(schema.lastCheckedBlocks.type, "TOKENS_FETCH"))
         .returning();
-
+      
       // If no record was updated, insert a new one
       if (updateResult.length === 0) {
         await this.db.insert(schema.lastCheckedBlocks).values({
@@ -138,14 +180,13 @@ export class FetchTokensCronService {
           blockNumber,
         });
         this.logger.debug(
-          `Created new last checked block record: ${blockNumber}`
+          `Created new last checked block record: ${blockNumber}`,
         );
       } else {
         this.logger.debug(`Updated last checked block to: ${blockNumber}`);
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to update last checked block: ${errorMessage}`);
     }
   }

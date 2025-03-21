@@ -17,7 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(ConfigService);
-  const config = configService.get<IAppConfig>(configNames.APP);
+  const config = configService.getOrThrow<IAppConfig>(configNames.APP);
 
   app.enableCors({
     credentials: true,
