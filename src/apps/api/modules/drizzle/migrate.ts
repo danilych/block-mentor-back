@@ -1,12 +1,12 @@
-import * as dotenv from 'dotenv';
-import { eq } from 'drizzle-orm';
-import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import path from 'path';
-import pg from 'pg';
-import { exit } from 'process';
+import * as dotenv from "dotenv";
+import { eq } from "drizzle-orm";
+import { type NodePgDatabase, drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import path from "path";
+import pg from "pg";
+import { exit } from "process";
 
-import * as allSchema from './schema';
+import * as allSchema from "./schema";
 
 dotenv.config();
 
@@ -21,10 +21,13 @@ dotenv.config();
     },
   });
 
-  const migrationPath = path.join(process.cwd(), 'src/modules/drizzle/migrations');
+  const migrationPath = path.join(
+    process.cwd(),
+    "src/apps/api/modules/drizzle/migrations"
+  );
 
   await migrate(db, { migrationsFolder: migrationPath });
 
-  console.log('Migration complete');
+  console.log("Migration complete");
   exit(0);
 })();

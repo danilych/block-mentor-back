@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import appConfig from "../../common/config/appConfig";
-import { CronModule } from "./modules/cron/cron.module";
+import { FetchTokensCronModule } from "./modules/fetch-tokens-cron/fetchTokensCron.module";
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { CronModule } from "./modules/cron/cron.module";
       load: [appConfig],
       isGlobal: true,
     }),
-    CronModule,
+    FetchTokensCronModule,
   ],
 })
 export class AppModule {}

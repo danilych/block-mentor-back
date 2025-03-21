@@ -21,7 +21,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx src/modules/drizzle/migrate.ts"
+    "db:migrate": "tsx src/apps/api/modules/drizzle/migrate.ts",
+    "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
