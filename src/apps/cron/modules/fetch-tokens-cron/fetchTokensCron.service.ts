@@ -90,9 +90,10 @@ export class FetchTokensCronService {
   async fetchTokens(): Promise<TokenCreated[] | null> {
     this.logger.log('Fetching tokens')
 
-
-    const job = await this.createTokenQueue.add({
-      foo: 'bar',
+    await this.createTokenQueue.add({
+      name: 'Example Token',
+      symbol: 'EXTKN',
+      initialSupply: '1000000',
     })
 
     try {

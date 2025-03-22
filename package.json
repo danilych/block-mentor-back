@@ -44,6 +44,7 @@
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.5",
     "drizzle-orm": "^0.40.1",
+    "ethers": "^6.13.5",
     "openai": "^4.89.0",
     "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
