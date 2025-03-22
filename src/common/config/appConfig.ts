@@ -8,6 +8,15 @@ export interface IAppConfig {
   graphQl: string
   privyId: string
   privySecret: string
+  bull: {
+    family: string
+    host: string
+    port: string
+    db: string
+    username: string
+    password: string
+    cacheDb: string
+  }
 }
 
 export default registerAs(configNames.APP, () => {
@@ -20,6 +29,13 @@ export default registerAs(configNames.APP, () => {
   const privyId = process.env.PRIVY_APP_ID as string
   const privySecret = process.env.PRIVY_APP_SECRET as string
 
+  const family = process.env.BULL_FAMILY as string
+  const host = process.env.BULL_HOST as string
+  const bullPort = process.env.BULL_PORT as string
+  const bullDB = process.env.BULL_DB as string
+  const bullUser = process.env.BULL_USER as string
+  const bullPass = process.env.BULL_PASS as string
+
   const config: IAppConfig = {
     port: port,
     db,
@@ -27,6 +43,15 @@ export default registerAs(configNames.APP, () => {
     graphQl,
     privyId,
     privySecret,
+    bull: {
+      family,
+      host,
+      port: bullPort,
+      db: bullDB,
+      username: bullUser,
+      password: bullPass,
+      cacheDb: '',
+    },
   }
   return config
 })
