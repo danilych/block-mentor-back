@@ -12,7 +12,11 @@ export const lastCheckedBlockType = pgEnum('last_checked_block_type', [
   'TOKENS_FETCH',
 ])
 
-export const messageRoles = pgEnum('message_roles', ['USER', 'AGENT'])
+export const messageRoles = pgEnum('message_roles', [
+  'user',
+  'assistant',
+  'system',
+])
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),

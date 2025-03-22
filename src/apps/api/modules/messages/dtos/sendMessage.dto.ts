@@ -11,5 +11,5 @@ export class SendMessageDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  role: 'USER' | 'AGENT'
+  role: 'user' | 'assistant'
 }

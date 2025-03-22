@@ -20,11 +20,25 @@ export class MessagesService {
     role,
     res: Response
   ): Promise<any> {
-    const chat = await this.db
-      .select()
-      .from(schema.chats)
-      .where(eq(schema.chats.userId, user.id))
-      .then(res => res[0])
+    const chat = await this.db.query.chats
+      .findFirst({
+        where: (chats, { eq }) => eq(chats.userId, user.id),
+        with: {
+          messages: true,
+        },
+      })
+      .then(res => res || null)
+
+    if (!chat) return
+
+    const combinedPrompt = [
+      ...chat.messages.map(message => ({
+        content: message.content,
+        role: message.role,
+      })),
+      { role: role, content: prompt },
+    ]
+
     await this.db.insert(schema.messages).values({
       content: prompt,
       chatId: chat.id,
@@ -32,7 +46,7 @@ export class MessagesService {
     })
 
     if (role === 'USER') {
-      return await this.openAiService.chat(prompt, res, prompt =>
+      return await this.openAiService.chat(combinedPrompt, res, prompt =>
         this.saveAgentMessage(prompt, chat)
       )
     }
@@ -42,7 +56,7 @@ export class MessagesService {
     await this.db.insert(schema.messages).values({
       content: prompt,
       chatId: chat.id,
-      role: 'AGENT',
+      role: 'assistant',
     })
   }
 }

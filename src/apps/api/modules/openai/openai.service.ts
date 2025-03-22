@@ -16,7 +16,7 @@ export class OpenAiService {
     this.openai = new OpenAI({ apiKey: this.appConfig.openAi })
   }
 
-  async chat(prompt: string, res: Response, callback) {
+  async chat(prompt: any[], res: Response, callback) {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
