@@ -27,6 +27,8 @@
     "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
+    "@nestjs-modules/ioredis": "^2.0.2",
+    "@nestjs/bull": "^11.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.1",
     "@nestjs/core": "^11.0.1",
