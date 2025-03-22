@@ -1,13 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
 
 export class SendMessageDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Prompt',
   })
   @IsString()
   @IsNotEmpty()
-  prompt: string;
+  prompt: string
 
   @ApiProperty()
   @IsNotEmpty()

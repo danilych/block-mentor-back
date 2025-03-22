@@ -1,3 +1,3 @@
 export enum configNames {
-    APP = 'app'
+  APP = 'app',
 }
