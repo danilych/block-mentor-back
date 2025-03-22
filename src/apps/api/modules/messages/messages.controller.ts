@@ -20,7 +20,7 @@ export class MessagesController {
     @Res() res: Response
   ): Promise<any> {
     return await this.messagesService.addMessage(
-      body.prompt,
+      body.content,
       user,
       body.role,
       res

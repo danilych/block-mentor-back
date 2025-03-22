@@ -7,7 +7,7 @@ export class SendMessageDto {
   })
   @IsString()
   @IsNotEmpty()
-  prompt: string
+  content: string
 
   @ApiProperty()
   @IsNotEmpty()
