@@ -1,7 +1,7 @@
 import { Controller, Post, UnauthorizedException } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
-import { GetAuthorizationHeader } from './decorators/get-authorization-header.decorator'
+import { GetTokenFromHeader } from './decorators/get-authorization-header.decorator'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -11,7 +11,7 @@ export class AuthController {
   @Post()
   @ApiBearerAuth()
   async authWithPrivyAuth(
-    @GetAuthorizationHeader() authToken: string | undefined
+    @GetTokenFromHeader() authToken: string | undefined
   ): Promise<any> {
     if (!authToken) {
       throw new UnauthorizedException('Missing auth token.')
