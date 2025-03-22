@@ -4,6 +4,7 @@ import OpenAI from 'openai'
 import { IAppConfig } from 'src/common/config/appConfig'
 import { configNames } from 'src/common/constants/configNames'
 import { Response } from 'express'
+import { basicPrompt } from 'src/common/constants/basicPrompt'
 
 @Injectable()
 export class OpenAiService {
@@ -29,6 +30,10 @@ export class OpenAiService {
         {
           role: 'user',
           content: prompt,
+        },
+        {
+          role: 'system',
+          content: basicPrompt,
         },
       ],
       stream: true,
