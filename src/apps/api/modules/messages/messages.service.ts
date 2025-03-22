@@ -29,15 +29,15 @@ export class MessagesService {
       })
       .then(res => res || null)
 
-    if (!chat) return
+    if (!chat) throw Error('There is no chat!')
 
-    const combinedPrompt = [
+    const combinedPrompt = JSON.stringify([
       ...chat.messages.map(message => ({
         content: message.content,
         role: message.role,
       })),
       { role: role, content: prompt },
-    ]
+    ])
 
     await this.db.insert(schema.messages).values({
       content: prompt,
@@ -45,7 +45,7 @@ export class MessagesService {
       role: role,
     })
 
-    if (role === 'USER') {
+    if (role === 'user') {
       return await this.openAiService.chat(combinedPrompt, res, prompt =>
         this.saveAgentMessage(prompt, chat)
       )

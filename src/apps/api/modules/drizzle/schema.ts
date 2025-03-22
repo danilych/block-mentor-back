@@ -20,7 +20,7 @@ export const messageRoles = pgEnum('message_roles', [
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
-  email: text('email').unique(),
+  email: text('email'),
   wallet: text('wallet').unique(),
 })
 

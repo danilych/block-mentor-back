@@ -1,5 +1,5 @@
 CREATE TYPE "public"."last_checked_block_type" AS ENUM('TOKENS_FETCH');--> statement-breakpoint
-CREATE TYPE "public"."message_roles" AS ENUM('USER', 'AGENT');--> statement-breakpoint
+CREATE TYPE "public"."message_roles" AS ENUM('user', 'assistant', 'system');--> statement-breakpoint
 CREATE TABLE "chats" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid
@@ -33,7 +33,6 @@ CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" text,
 	"wallet" text,
-	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_wallet_unique" UNIQUE("wallet")
 );
 --> statement-breakpoint

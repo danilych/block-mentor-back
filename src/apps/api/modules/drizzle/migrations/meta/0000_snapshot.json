@@ -1,5 +1,5 @@
 {
-  "id": "1bb631fc-3a64-408c-9c15-f5acfabc523d",
+  "id": "cd039241-acea-4e0d-b6d8-cc98e16b5169",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -221,13 +221,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        },
         "users_wallet_unique": {
           "name": "users_wallet_unique",
           "nullsNotDistinct": false,
@@ -253,8 +246,9 @@
       "name": "message_roles",
       "schema": "public",
       "values": [
-        "USER",
-        "AGENT"
+        "user",
+        "assistant",
+        "system"
       ]
     }
   },
