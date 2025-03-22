@@ -59,21 +59,6 @@ export class CreateTokenService {
         [data.name, data.symbol, ethers.parseUnits(data.initialSupply, 18)]
       )
 
-      // Prepare transaction object for signing
-      const transaction = {
-        to: arbitrumTokenFactoryAddress,
-        data: encodedData,
-        value: '0x', // No ETH being sent with the transaction
-      }
-
-      console.log(transaction)
-      console.log(data)
-
-      const userWalletPrivy = await this.privy.getUserByWalletAddress(
-        '0xc2110d0d51884bE876691177dC11b7871EC8252D'
-      )
-      console.log({ userWalletPrivy })
-
       const signedTransaction =
         await this.privy.walletApi.ethereum.sendTransaction({
           address: '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
@@ -86,9 +71,6 @@ export class CreateTokenService {
             data: encodedData,
           },
         })
-
-      // Now broadcast the signed transaction to the network
-      // TODO: Add broadcast logic or integration with a provider here
 
       this.logger.log('Token creation transaction signed successfully')
       this.logger.log('Create token job finished, proceed action...')
