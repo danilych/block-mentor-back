@@ -11,10 +11,5 @@ export class SendMessageDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsUUID()
-  chatId: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
   role: 'USER' | 'AGENT'
 }

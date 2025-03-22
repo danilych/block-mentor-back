@@ -11,22 +11,6 @@ export class ChatService {
     }
 
     async getOrCreateChat(userId: string) {
-        return {
-            id: "23123123",
-            userId: "2132131231",
-            messages: [
-                {
-                content: "hello pidoras",
-                role: "USER",
-                },
-               {
-                content: "hello gandon",
-                role: "AGENT",
-               }
-            ]
-        }
-
-
         const chat = await this.db.select({
             id: chats.id,
             userId: chats.userId,
@@ -40,7 +24,7 @@ export class ChatService {
         if (!chat) {
             const newChat = await this.db.insert(chats).values({
                 userId: userId,
-            })
+            }).returning()
 
             return newChat
         }

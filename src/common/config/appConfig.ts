@@ -6,6 +6,8 @@ export interface IAppConfig {
   db: string;
   openAi: string;
   graphQl: string;
+  privyId: string;
+  privySecret: string;
 }
 
 export default registerAs(configNames.APP, () => {
@@ -15,11 +17,16 @@ export default registerAs(configNames.APP, () => {
   const graphQl =
     "https://api.studio.thegraph.com/query/107388/block-mentor/version/latest";
 
+  const privyId = process.env.PRIVY_APP_ID as string
+  const privySecret = process.env.PRIVY_APP_SECRET as string
+
   const config: IAppConfig = {
     port: port,
     db,
     openAi,
     graphQl,
+    privyId,
+    privySecret
   };
   return config;
 });

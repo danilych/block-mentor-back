@@ -1,6 +1,9 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { TUser } from 'src/common/constants/types';
+import { PrivyGuard } from '../auth/guards/privy-auth.guard';
+import { User } from '../user/decorators/user.params';
 import { ChatService } from './chat.service';
-import { GetOrCreateChatDto } from './dtos/getOrCreateChat.dto';
 
 @Controller('chats')
 export class ChatController {
@@ -10,8 +13,10 @@ export class ChatController {
         ) {}
 
     @Get('')
+    @ApiBearerAuth()
+    @UseGuards(PrivyGuard)
     @HttpCode(HttpStatus.OK)
-    async getOrCreateChat(@Query() query: GetOrCreateChatDto) {
-      return await this.chatService.getOrCreateChat(query.userId);
+    async getOrCreateChat(@User() user: TUser) {
+      return await this.chatService.getOrCreateChat(user.id);
     }
 }
