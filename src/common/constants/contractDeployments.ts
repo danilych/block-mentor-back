@@ -1,2 +1,2 @@
 export const arbitrumTokenFactoryAddress =
-  '0x24260d046005f74aCa953e3aA00028DEFadABdC7'
+  '0xbd39A7fAbBc9D92df06d93B226C62EA820CCf325'
