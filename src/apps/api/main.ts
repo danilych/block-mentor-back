@@ -17,10 +17,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   const config = configService.getOrThrow<IAppConfig>(configNames.APP)
 
-  app.enableCors({
-    credentials: true,
-    origin: true,
-  })
+  app.enableCors()
 
   if (!config) {
     throw new Error('App config does not exists')

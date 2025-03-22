@@ -41,7 +41,7 @@ export class PrivyGuard implements CanActivate {
       .then(res => res[0])
 
     if (!userStillExists) {
-      throw new GoneException()
+      throw new UnauthorizedException('User not found.')
     }
 
     Reflect.defineMetadata('user', userStillExists, context.getHandler())

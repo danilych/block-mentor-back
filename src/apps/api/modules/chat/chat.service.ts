@@ -12,23 +12,14 @@ export class ChatService {
   ) {}
 
   async getOrCreateChat(userId: string) {
-    // const chat = await this.db
-    //   .select({
-    //     id: chats.id,
-    //     userId: chats.userId,
-    //     messages: schema.messages,
-    //   })
-    //   .from(chats)
-    //   .leftJoin(schema.messages, eq(chats.id, schema.messages.chatId))
-    //   .where(eq(chats.userId, userId))
-    //   .then(res => res[0] || null)
-
-    const chat = await this.db.query.chats.findFirst({
-      where: (chats, { eq }) => eq(chats.userId, userId),
-      with: {
-        messages: true,
-      },
-    })
+    const chat = await this.db.query.chats
+      .findFirst({
+        where: (chats, { eq }) => eq(chats.userId, userId),
+        with: {
+          messages: true,
+        },
+      })
+      .then(res => res || null)
 
     if (!chat) {
       const newChat = await this.db
