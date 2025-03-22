@@ -5,6 +5,9 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { eq } from 'drizzle-orm'
 import * as schema from '../../../api/modules/drizzle/schema'
 import { DrizzleAsyncProvider } from '../../../api/modules/drizzle/drizzle.provider'
+import { InjectQueue } from '@nestjs/bull'
+import { CREATE_TOKEN } from 'src/common/constants/queues'
+import { Queue } from 'bull'
 
 interface TokenCreated {
   blockNumber: string
@@ -47,7 +50,8 @@ export class FetchTokensCronService {
 
   constructor(
     private configService: ConfigService,
-    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>
+    @Inject(DrizzleAsyncProvider) private db: NodePgDatabase<typeof schema>,
+    @InjectQueue(CREATE_TOKEN) private createTokenQueue: Queue
   ) {
     const config = this.configService.get<AppConfig>('app')
     this.graphQlEndpoint = config?.graphQl || ''
@@ -85,6 +89,11 @@ export class FetchTokensCronService {
   @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchTokens(): Promise<TokenCreated[] | null> {
     this.logger.log('Fetching tokens')
+
+
+    const job = await this.createTokenQueue.add({
+      foo: 'bar',
+    })
 
     try {
       // Get the last checked block number
