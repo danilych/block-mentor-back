@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://block-mentor.io" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Block Mentor Logo" /></a>
+  <a href="https://block-mentor.io" target="blank"><img src="./assets/logo.png" width="120" alt="Block Mentor Logo" /></a>
 </p>
 
 <p align="center">BlockMentor - Your Web3 AI Assistant</p>
@@ -12,6 +12,7 @@ BlockMentor is a powerful Web3 AI assistant designed to simplify blockchain inte
 ## Key Features
 
 ### Token Creation
+
 - Create custom ERC-20 tokens on Arbitrum and Base testnets
 - Simple conversational interface requiring only basic information:
   - Chain selection (Arbitrum or Base)
@@ -20,10 +21,12 @@ BlockMentor is a powerful Web3 AI assistant designed to simplify blockchain inte
   - Initial token supply
 
 ### Omnichain Token Creation
+
 - Deploy tokens that work across multiple blockchains
 - Simplified creation process similar to regular tokens
 
 ### Vesting Solutions
+
 - Create token vesting schedules for projects and teams
 - Customize parameters including:
   - Start timestamp
@@ -33,6 +36,7 @@ BlockMentor is a powerful Web3 AI assistant designed to simplify blockchain inte
   - Chain selection
 
 ### User-Friendly Interface
+
 - Natural language interaction with the BlockMentor AI
 - No need for technical blockchain knowledge
 - Guided prompts to collect all required information
@@ -43,11 +47,13 @@ BlockMentor is a powerful Web3 AI assistant designed to simplify blockchain inte
 The application is built with NestJS and follows a modular architecture:
 
 ### Apps
+
 - **API**: Handles HTTP requests, authentication, and chat interactions
 - **Workers**: Processes blockchain operations (token creation, vesting, etc.)
 - **Cron**: Manages scheduled tasks
 
 ### Modules
+
 - **Auth**: Authentication using Privy for Web3 wallet integration
 - **Chat**: User conversation management and storage
 - **OpenAI**: Integration with OpenAI for AI assistant functionality
@@ -59,6 +65,7 @@ The application is built with NestJS and follows a modular architecture:
 - **Create-Omnichain-Token**: Omnichain token creation
 
 ### Blockchain Integration
+
 - Supports Arbitrum and Base testnets
 - Smart contract integration for token creation and management
 - Vesting schedule deployment
@@ -133,6 +140,7 @@ $ npm run db:studio
 ## Supported Networks
 
 Currently, BlockMentor supports:
+
 - Arbitrum Testnet
 - Base Testnet
 
