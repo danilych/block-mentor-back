@@ -136,6 +136,8 @@ export class FetchOmnichainTokensCronService {
         token_address: token.token.toLowerCase(),
       }))
 
+      console.log(tokensForDb)
+
       for (const token of tokensForDb) {
         const query2 = `
         query MyQuery {
@@ -156,6 +158,8 @@ export class FetchOmnichainTokensCronService {
 
         const resultV2 = (await responseV2.json()) as GraphQLResponse
         const fetchedTokensV2 = resultV2.data?.omnichainTokenCreateds || []
+
+        console.log(fetchedTokensV2)
 
         token.base_address = fetchedTokensV2[0]?.token
       }
