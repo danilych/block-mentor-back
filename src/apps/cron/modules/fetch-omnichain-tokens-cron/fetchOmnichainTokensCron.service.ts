@@ -95,6 +95,7 @@ export class FetchOmnichainTokensCronService {
         query MyQuery {
         omnichainTokenCreateds(where: {blockNumber_gt: "${lastBlockNumber}"}) {
         blockNumber
+        blockTimestamp
         initialAmount
         name
         owner
@@ -142,8 +143,9 @@ export class FetchOmnichainTokensCronService {
         const query2 = `
         query MyQuery {
         omnichainTokenCreated
-        omnichainTokenCreateds(where: {name: ${token.name}}) {
+        omnichainTokenCreateds(where: {name: "${token.name}"}) {
         token
+        blockTimestamp
         }
       }
       `
