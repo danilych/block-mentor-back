@@ -26,7 +26,6 @@ interface AppConfig {
 export class CreateTokenService {
   private readonly logger = new Logger(CreateTokenService.name)
   private readonly privy: PrivyClient
-  private readonly tokenFactoryAddress = '0xYourTokenFactoryAddress' // Replace with actual contract address
 
   constructor(private readonly configService: ConfigService) {
     const config = this.configService.get<AppConfig>('app')

@@ -18,7 +18,11 @@ export class QueueDispatcherService {
           userWalletAddress: userWallet,
         }),
     }
-
+    await this.createTokenQueue.add({
+      components: json,
+      userWalletAddress: userWallet,
+    })
+    console.log('after worker')
     await jobs[json.type]()
   }
 }
