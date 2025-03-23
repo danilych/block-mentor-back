@@ -1,31 +1,24 @@
-import { Processor, Process } from '@nestjs/bull'
-import { Logger } from '@nestjs/common'
-import { Job } from 'bull'
-import { JSON_DECODE } from 'src/common/constants/queues'
+import { Injectable, Logger } from '@nestjs/common'
 
-@Processor({ name: JSON_DECODE })
+@Injectable()
 export class JSONDecodeService {
   private readonly logger = new Logger(JSONDecodeService.name)
 
   constructor() {}
 
-  @Process({ concurrency: 1 })
-  async handlePurchase(
-    job: Job<{
-      payload: object
-    }>
-  ) {
-    this.logger.log(`New job received in ${JSON_DECODE}`)
-    const { payload } = job.data
+  async decode({
+    name,
+    ticker,
+    initialAmount,
+  }: {
+    name: string
+    ticker: string
+    initialAmount: string
+  }): Promise<any> {
+    return
+  }
 
-    // TODO: Add service to decode JSON
-
-    try {
-      this.logger.log('JSON Decode finished, proceed action...')
-      return { success: true }
-    } catch (err) {
-      if (job.attemptsMade === 3) {
-      }
-    }
+  private async procceed() {
+    return
   }
 }
