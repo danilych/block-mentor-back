@@ -19,7 +19,7 @@ interface TokenCreated {
 
 interface GraphQLResponse {
   data?: {
-    tokenCreateds: TokenCreated[]
+    omnichainTokenCreateds: TokenCreated[]
   }
   errors?: Array<{
     message: string
@@ -42,8 +42,8 @@ interface DbToken {
 }
 
 @Injectable()
-export class FetchTokensCronService {
-  private readonly logger = new Logger(FetchTokensCronService.name)
+export class FetchOmnichainTokensCronService {
+  private readonly logger = new Logger(FetchOmnichainTokensCronService.name)
   private readonly graphQlEndpoint: string
 
   constructor(
