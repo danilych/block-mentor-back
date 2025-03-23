@@ -7,18 +7,24 @@ import { ethers } from 'ethers'
 import { TOKEN_FACTORY_ABI } from 'src/common/abi/token-factory-abi'
 import { arbitrumSepolia } from 'src/common/constants/chains'
 import { arbitrumTokenFactoryAddress } from 'src/common/constants/contractDeployments'
+import { EJobs } from 'src/common/constants/jobs_type'
 import { CREATE_TOKEN } from 'src/common/constants/queues'
 
-interface TokenComponents {
+export interface TokenComponents {
   name: string
   symbol: string
   initialSupply: string
-  userWalletAddress: string
+  network: string
 }
 
 interface AppConfig {
   privyId: string
   privySecret: string
+}
+
+enum ESupportedChains {
+  arbitrum = '421614',
+  base = '84532',
 }
 
 @Processor({ name: CREATE_TOKEN })
@@ -39,15 +45,18 @@ export class CreateTokenService {
   @Process({ concurrency: 1 })
   async handlePurchase(
     job: Job<{
-      components?: TokenComponents
-      [key: string]: any
+      components: TokenComponents
+      userWalletAddress: string
     }>
   ) {
     try {
-      const data = job.data as TokenComponents
+      const { components, userWalletAddress } = job.data as {
+        components: TokenComponents
+        userWalletAddress: string
+      }
 
       this.logger.log(
-        `Creating token: ${data.name} (${data.symbol}) with supply ${data.initialSupply}`
+        `Creating token: ${components.name} (${components.symbol}) with supply ${components.initialSupply}`
       )
 
       // Create interface from ABI for encoding function data
@@ -55,18 +64,18 @@ export class CreateTokenService {
 
       // Encode the function call with parameters
       const encodedData = tokenFactoryInterface.encodeFunctionData(
-        'createToken',
-        [data.name, data.symbol, ethers.parseUnits(data.initialSupply, 18)]
+        EJobs.CREATE_TOKEN,
+        [components.name, components.symbol, components.initialSupply]
       )
 
       const signedTransaction =
         await this.privy.walletApi.ethereum.sendTransaction({
-          address: '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
+          address: userWalletAddress,
           chainType: 'ethereum',
           caip2: `eip155:${arbitrumSepolia}`,
           transaction: {
             value: Number(0),
-            chainId: arbitrumSepolia,
+            chainId: ESupportedChains[components.network],
             to: arbitrumTokenFactoryAddress,
             data: encodedData,
           },
@@ -74,15 +83,11 @@ export class CreateTokenService {
 
       this.logger.log('Token creation transaction signed successfully')
       this.logger.log('Create token job finished, proceed action...')
-      return { success: true, data }
+      return { success: true }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
       this.logger.error(`Error creating token: ${errorMessage}`)
-
-      if (job.attemptsMade === 3) {
-        this.logger.error('Max attempts reached, abandoning job')
-      }
       throw error
     }
   }

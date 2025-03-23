@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { configNames } from 'src/common/constants/configNames'
 import appConfig, { IAppConfig } from '../../common/config/appConfig'
 import { BullModule } from '@nestjs/bull'
-import { JsonDecodeModule } from './modules/json-decode/json-decode.module'
 import { CreateTokenModule } from './modules/create-token/create-token.module'
 
 @Module({
@@ -29,7 +28,6 @@ import { CreateTokenModule } from './modules/create-token/create-token.module'
         }
       },
     }),
-    JsonDecodeModule,
     CreateTokenModule,
   ],
 })
