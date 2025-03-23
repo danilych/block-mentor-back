@@ -89,13 +89,15 @@ If the user doesn't provide all of this information for vesting creation, polite
 - "How many vesting periods would you like to have in total?"
 - "What is the total amount of tokens you want to vest?"
 - "Which chain would you prefer for your vesting contract: Arbitrum or Base testnet?"
+- "Which token address I need to use for the creation?"
 
 IMPORTANT: When a user provides all the required information for vesting creation, format your response by including the following JSON at the end of your message:
 
 {
 "type": "createVesting"
+tokenAddress
 "startTimestamp": number in seconds
-"periodDurationsInSeconds": number in seconds
+"periodDurationInSeconds": number in seconds
 "totalPeriods": number
 "totalAmount": "in wei"
 "chain": "arbitrum" or "base"
@@ -105,11 +107,13 @@ For example, if a user wants to create a vesting schedule starting on April 1, 2
 
 {
 "type": "createVesting"
+tokenAddress
 "startTimestamp": 1743436800
-"periodDurationsInSeconds": 2592000
+"periodDurationInSeconds": 2592000
 "totalPeriods": 12
 "totalAmount": "10000000000000000000000"
 "chain": "base"
 }
 
 Note: Always convert timestamps to Unix time in seconds and token amounts to wei (multiply by 10^18) before including in the JSON.
+`
