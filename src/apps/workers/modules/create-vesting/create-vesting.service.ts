@@ -6,20 +6,16 @@ import { Job } from 'bull'
 import { ethers } from 'ethers'
 import { ERC20_ABI } from 'src/common/abi/erc20-abi'
 import { VESTING_FACTORY_ABI } from 'src/common/abi/vesting-factory-abi'
-import { arbitrumSepolia } from 'src/common/constants/chains'
-import {
-  arbitrumTokenFactoryAddress,
-  arbitrumVestingFactoryAddress,
-} from 'src/common/constants/contractDeployments'
+
 import { CREATE_VESTING } from 'src/common/constants/queues'
 
 interface VestingComponents {
-  userWalletAddress: string
   tokenAddress: string
   startTimestamp: string
   periodDurationInSeconds: string
   totalPeriods: string
   totalAmount: string
+  chain: string
 }
 
 interface AppConfig {
@@ -44,50 +40,53 @@ export class CreateVestingService {
   @Process({ concurrency: 1 })
   async handlePurchase(
     job: Job<{
-      components?: VestingComponents
-      [key: string]: any
+      components: VestingComponents
+      userWalletAddress: string
     }>
   ) {
     try {
-      const data = job.data as VestingComponents
+      const { components, userWalletAddress } = job.data as {
+        components: VestingComponents
+        userWalletAddress: string
+      }
 
       this.logger.log(
-        `Creating vesting for token at address ${data.tokenAddress}`
+        `Creating vesting for token at address ${components.tokenAddress}`
       )
 
-      console.log(ethers.parseUnits(data.totalAmount, 18))
+      console.log(ethers.parseUnits(components.totalAmount, 18))
 
       // Create interface from ABI for encoding function data
       const tokenFactoryInterface = new ethers.Interface(ERC20_ABI)
       const encodedApproveData = tokenFactoryInterface.encodeFunctionData(
         'approve',
-        [arbitrumVestingFactoryAddress, ethers.parseUnits(data.totalAmount, 18)]
+        [ETokenFactoryDeployments[components.chain], ethers.parseUnits(components.totalAmount, 18)]
       )
       await this.privy.walletApi.ethereum.sendTransaction({
-        address: '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
+        address: userWalletAddress,
         chainType: 'ethereum',
-        caip2: `eip155:${arbitrumSepolia}`,
+        caip2: `eip155:${ESupportedChains[components.chain]}`,
         transaction: {
           value: Number(0),
-          chainId: arbitrumSepolia,
-          to: data.tokenAddress,
+          chainId: ESupportedChains[components.chain],
+          to: components.tokenAddress,
           data: encodedApproveData,
         },
       })
 
-      console.log(data);
+      console.log(components);
 
       const vestingFactoryInterface = new ethers.Interface(VESTING_FACTORY_ABI)
       // Encode the function call with parameters
       const encodedData = vestingFactoryInterface.encodeFunctionData(
         'createVestingContractWithSchedule',
         [
-          data.tokenAddress,
-          '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
-          data.startTimestamp,
-          data.periodDurationInSeconds,
-          data.totalPeriods,
-          data.totalAmount,
+          components.tokenAddress,
+          userWalletAddress,
+          components.startTimestamp,
+          components.periodDurationInSeconds,
+          components.totalPeriods,
+          components.totalAmount,
         ]
       )
 
@@ -95,20 +94,20 @@ export class CreateVestingService {
 
       const signedTransaction =
         await this.privy.walletApi.ethereum.sendTransaction({
-          address: '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
+          address: userWalletAddress,
           chainType: 'ethereum',
-          caip2: `eip155:${arbitrumSepolia}`,
+          caip2: `eip155:${ESupportedChains[components.chain]}`,
           transaction: {
             value: Number(0),
-            chainId: arbitrumSepolia,
-            to: arbitrumVestingFactoryAddress,
+            chainId: ESupportedChains[components.chain],
+            to: ETokenFactoryDeployments[components.chain],
             data: encodedData,
           },
         })
 
       this.logger.log('Vesting creation transaction signed successfully')
       this.logger.log('Create vesting job finished, proceed action...')
-      return { success: true, data }
+      return { success: true }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)

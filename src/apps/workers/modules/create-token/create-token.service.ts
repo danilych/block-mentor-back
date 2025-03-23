@@ -62,18 +62,17 @@ export class CreateTokenService {
         [components.tokenName, components.symbol, components.amount]
       )
 
-      const signedTransaction =
-        await this.privy.walletApi.ethereum.sendTransaction({
-          address: userWalletAddress,
-          chainType: 'ethereum',
-          caip2: `eip155:${ESupportedChains[components.chain]}`,
-          transaction: {
-            value: Number(0),
-            chainId: ESupportedChains[components.network],
-            to: ETokenFactoryDeployments[components.network],
-            data: encodedData,
-          },
-        })
+      await this.privy.walletApi.ethereum.sendTransaction({
+        address: userWalletAddress,
+        chainType: 'ethereum',
+        caip2: `eip155:${ESupportedChains[components.chain]}`,
+        transaction: {
+          value: Number(0),
+          chainId: ESupportedChains[components.chain],
+          to: ETokenFactoryDeployments[components.chain],
+          data: encodedData,
+        },
+      })
 
       this.logger.log('Token creation transaction signed successfully')
       this.logger.log('Create token job finished, proceed action...')
