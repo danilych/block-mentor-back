@@ -7,7 +7,7 @@ import { ethers } from 'ethers'
 import { ERC20_ABI } from 'src/common/abi/erc20-abi'
 import { VESTING_FACTORY_ABI } from 'src/common/abi/vesting-factory-abi'
 import { ESupportedChains } from 'src/common/constants/chains'
-import { ETokenFactoryDeployments } from 'src/common/constants/contractDeployments'
+import { ETokenVestingFactoryDeployments } from 'src/common/constants/contractDeployments'
 
 import { CREATE_VESTING } from 'src/common/constants/queues'
 
@@ -63,7 +63,7 @@ export class CreateVestingService {
       const encodedApproveData = tokenFactoryInterface.encodeFunctionData(
         'approve',
         [
-          ETokenFactoryDeployments[components.chain],
+          ETokenVestingFactoryDeployments[components.chain],
           ethers.parseUnits(components.totalAmount, 18),
         ]
       )
@@ -105,7 +105,7 @@ export class CreateVestingService {
           transaction: {
             value: Number(0),
             chainId: +ESupportedChains[components.chain],
-            to: ETokenFactoryDeployments[components.chain],
+            to: ETokenVestingFactoryDeployments[components.chain],
             data: encodedData,
           },
         })
