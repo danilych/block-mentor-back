@@ -46,7 +46,7 @@ export class MessagesService {
     })
 
     if (role === 'user') {
-      return await this.openAiService.chat(combinedPrompt, res, prompt =>
+      return await this.openAiService.chat(combinedPrompt, res, user, prompt =>
         this.saveAgentMessage(prompt, chat)
       )
     }

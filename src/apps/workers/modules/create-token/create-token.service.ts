@@ -5,15 +5,16 @@ import { PrivyClient } from '@privy-io/server-auth'
 import { Job } from 'bull'
 import { ethers } from 'ethers'
 import { TOKEN_FACTORY_ABI } from 'src/common/abi/token-factory-abi'
-import { arbitrumSepolia } from 'src/common/constants/chains'
-import { arbitrumTokenFactoryAddress } from 'src/common/constants/contractDeployments'
+import { ESupportedChains } from 'src/common/constants/chains'
+import { EContractDeployments } from 'src/common/constants/contractDeployments'
+import { EJobs } from 'src/common/constants/jobs_type'
 import { CREATE_TOKEN } from 'src/common/constants/queues'
 
-interface TokenComponents {
-  name: string
+export interface TokenComponents {
+  tokenName: string
   symbol: string
-  initialSupply: string
-  userWalletAddress: string
+  amount: string
+  network: string
 }
 
 interface AppConfig {
@@ -39,15 +40,18 @@ export class CreateTokenService {
   @Process({ concurrency: 1 })
   async handlePurchase(
     job: Job<{
-      components?: TokenComponents
-      [key: string]: any
+      components: TokenComponents
+      userWalletAddress: string
     }>
   ) {
     try {
-      const data = job.data as TokenComponents
+      const { components, userWalletAddress } = job.data as {
+        components: TokenComponents
+        userWalletAddress: string
+      }
 
       this.logger.log(
-        `Creating token: ${data.name} (${data.symbol}) with supply ${data.initialSupply}`
+        `Creating token: ${components.tokenName} (${components.symbol}) with supply ${components.amount}`
       )
 
       // Create interface from ABI for encoding function data
@@ -55,34 +59,30 @@ export class CreateTokenService {
 
       // Encode the function call with parameters
       const encodedData = tokenFactoryInterface.encodeFunctionData(
-        'createToken',
-        [data.name, data.symbol, ethers.parseUnits(data.initialSupply, 18)]
+        EJobs.CREATE_TOKEN,
+        [components.tokenName, components.symbol, components.amount]
       )
 
       const signedTransaction =
         await this.privy.walletApi.ethereum.sendTransaction({
-          address: '0xe70aA1ced6C4bb44a7Edb4eEc527D67050d6cC19',
+          address: userWalletAddress,
           chainType: 'ethereum',
-          caip2: `eip155:${arbitrumSepolia}`,
+          caip2: `eip155:${ESupportedChains[components.network]}`,
           transaction: {
             value: Number(0),
-            chainId: arbitrumSepolia,
-            to: arbitrumTokenFactoryAddress,
+            chainId: ESupportedChains[components.network],
+            to: EContractDeployments[components.network],
             data: encodedData,
           },
         })
 
       this.logger.log('Token creation transaction signed successfully')
       this.logger.log('Create token job finished, proceed action...')
-      return { success: true, data }
+      return { success: true }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
       this.logger.error(`Error creating token: ${errorMessage}`)
-
-      if (job.attemptsMade === 3) {
-        this.logger.error('Max attempts reached, abandoning job')
-      }
       throw error
     }
   }
