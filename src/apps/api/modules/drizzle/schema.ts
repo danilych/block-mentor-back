@@ -72,3 +72,16 @@ export const createdTokens = pgTable('created_tokens', {
   owner: text('owner').notNull(),
   token_address: text('token').notNull(),
 })
+
+export const vestings = pgTable('vestings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  blockTimestamp: text('block_timestamp').notNull(),
+  token_address: text('token_address').notNull(),
+  token_name: text('token_name').notNull(),
+  token_ticker: text('token_ticker').notNull(),
+  owner: text('owner').notNull(),
+  amount: text('amount').notNull(),
+  total_periods: integer('total_periods').notNull(),
+  period_duration: integer('period_duration').notNull(),
+  start_timestamp: text('start_timestamp').notNull(),
+})
