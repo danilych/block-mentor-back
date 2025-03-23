@@ -62,7 +62,10 @@ export class CreateVestingService {
       const tokenFactoryInterface = new ethers.Interface(ERC20_ABI)
       const encodedApproveData = tokenFactoryInterface.encodeFunctionData(
         'approve',
-        [ETokenFactoryDeployments[components.chain], ethers.parseUnits(components.totalAmount, 18)]
+        [
+          ETokenFactoryDeployments[components.chain],
+          ethers.parseUnits(components.totalAmount, 18),
+        ]
       )
       await this.privy.walletApi.ethereum.sendTransaction({
         address: userWalletAddress,
@@ -76,7 +79,7 @@ export class CreateVestingService {
         },
       })
 
-      console.log(components);
+      console.log(components)
 
       const vestingFactoryInterface = new ethers.Interface(VESTING_FACTORY_ABI)
       // Encode the function call with parameters
