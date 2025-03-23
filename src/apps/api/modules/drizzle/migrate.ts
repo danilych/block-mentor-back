@@ -9,7 +9,6 @@ import { exit } from 'process'
 import * as allSchema from './schema'
 
 dotenv.config()
-
 ;(async () => {
   const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
