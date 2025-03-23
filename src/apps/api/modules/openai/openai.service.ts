@@ -65,7 +65,7 @@ export class OpenAiService {
         JSON.parse(jsonString)
       )
     } catch (err) {
-      this.logger.log('Error to procced queues')
+      this.logger.log(`Error to procced queues ${JSON.stringify(err.message)}`)
     }
   }
 }
