@@ -22,7 +22,7 @@ export class QueueDispatcherService {
       components: json,
       userWalletAddress: userWallet,
     })
-    console.log('after worker')
+
     await jobs[json.type]()
   }
 }

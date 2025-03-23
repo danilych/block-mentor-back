@@ -14,15 +14,13 @@ export interface TokenComponents {
   tokenName: string
   symbol: string
   amount: string
-  network: string
+  chain: string
 }
 
 interface AppConfig {
   privyId: string
   privySecret: string
 }
-
-console.log('CREATE')
 
 @Processor({ name: CREATE_TOKEN })
 export class CreateTokenService {
@@ -68,11 +66,11 @@ export class CreateTokenService {
         await this.privy.walletApi.ethereum.sendTransaction({
           address: userWalletAddress,
           chainType: 'ethereum',
-          caip2: `eip155:${ESupportedChains[components.network]}`,
+          caip2: `eip155:${ESupportedChains[components.chain]}`,
           transaction: {
             value: Number(0),
-            chainId: ESupportedChains[components.network],
-            to: EContractDeployments[components.network],
+            chainId: +ESupportedChains[components.chain],
+            to: EContractDeployments[components.chain],
             data: encodedData,
           },
         })

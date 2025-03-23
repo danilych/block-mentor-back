@@ -15,7 +15,6 @@ import { CreateTokenModule } from './modules/create-token/create-token.module'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const { bull } = configService.getOrThrow<IAppConfig>(configNames.APP)
-        console.log('bull w', bull)
 
         return {
           redis: {
