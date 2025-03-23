@@ -53,14 +53,14 @@ export class OpenAiService {
     callback(fullText)
     res.end()
 
-    const jsonStringStartIdx = fullText.indexOf('{')
-    const jsonStringEndIdx = fullText.indexOf('}')
-    const jsonString = fullText
-      .slice(jsonStringStartIdx, jsonStringEndIdx + 1)
-      .replaceAll('\n', '')
+    const jsonString = fullText.replaceAll('\n', '')
 
     try {
-      const parsedObject = JSON.parse(jsonString)
+      const regex =
+        /\{(?:\s*"[^"]*"\s*:\s*"[^"]*"\s*,?)*\s*"[^"]*"\s*:\s*"[^"]*"\s*\}/g
+      const matches = jsonString.match(regex)
+      if (!matches?.length) return
+      const parsedObject = JSON.parse(matches?.[0] as string)
       const keys = Object.keys(parsedObject)
       for (const key of keys) {
         parsedObject[key] = parsedObject[key].replaceAll(' ', '')
