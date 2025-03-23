@@ -6,6 +6,8 @@ import { Job } from 'bull'
 import { ethers } from 'ethers'
 import { ERC20_ABI } from 'src/common/abi/erc20-abi'
 import { VESTING_FACTORY_ABI } from 'src/common/abi/vesting-factory-abi'
+import { ESupportedChains } from 'src/common/constants/chains'
+import { ETokenFactoryDeployments } from 'src/common/constants/contractDeployments'
 
 import { CREATE_VESTING } from 'src/common/constants/queues'
 
