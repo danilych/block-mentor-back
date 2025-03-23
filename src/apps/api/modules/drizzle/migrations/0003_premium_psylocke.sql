@@ -1,0 +1,1 @@
+ALTER TABLE "vestings" ADD COLUMN "base_address" text;

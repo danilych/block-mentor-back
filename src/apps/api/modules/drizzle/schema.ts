@@ -85,4 +85,5 @@ export const vestings = pgTable('vestings', {
   total_periods: integer('total_periods').notNull(),
   period_duration: integer('period_duration').notNull(),
   start_timestamp: text('start_timestamp').notNull(),
+  base_address: text('base_address'),
 })
