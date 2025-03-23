@@ -6,7 +6,7 @@ import { Job } from 'bull'
 import { ethers } from 'ethers'
 import { TOKEN_FACTORY_ABI } from 'src/common/abi/token-factory-abi'
 import { ESupportedChains } from 'src/common/constants/chains'
-import { EContractDeployments } from 'src/common/constants/contractDeployments'
+import { ETokenFactoryDeployments } from 'src/common/constants/contractDeployments'
 import { EJobs } from 'src/common/constants/jobs_type'
 import { CREATE_TOKEN } from 'src/common/constants/queues'
 
@@ -69,8 +69,8 @@ export class CreateTokenService {
           caip2: `eip155:${ESupportedChains[components.chain]}`,
           transaction: {
             value: Number(0),
-            chainId: +ESupportedChains[components.chain],
-            to: EContractDeployments[components.chain],
+            chainId: ESupportedChains[components.network],
+            to: ETokenFactoryDeployments[components.network],
             data: encodedData,
           },
         })
