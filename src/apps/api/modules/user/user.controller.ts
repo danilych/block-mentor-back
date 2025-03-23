@@ -6,10 +6,8 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 import { UserService } from './user.service'
-import {
-  GetTokensByUserDto,
-  GetVestingsByUserDto,
-} from './dto/get-tokens-by-user.dto'
+import { GetTokensByUserDto } from './dto/get-tokens-by-user.dto'
+import { GetVestingsByUserDto } from './dto/get-vestings-by-user.dto'
 
 @Controller('user')
 export class UserController {
