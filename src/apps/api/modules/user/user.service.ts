@@ -24,6 +24,14 @@ export class UserService {
     return tokens
   }
 
+  async getTokenByAddress(tokenAddress: string) {
+    return await this.db
+      .select()
+      .from(schema.createdTokens)
+      .where(eq(schema.createdTokens.token_address, tokenAddress))
+      .limit(1)
+  }
+
   async getVestingsByUser(wallet: string) {
     const vestings = await this.db
       .select()
