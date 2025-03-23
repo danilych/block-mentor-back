@@ -6,3 +6,10 @@ export class GetTokensByUserDto {
   @IsString()
   wallet: string
 }
+
+export class GetVestingsByUserDto {
+  @IsEthereumAddress()
+  @IsNotEmpty()
+  @IsString()
+  wallet: string
+}
