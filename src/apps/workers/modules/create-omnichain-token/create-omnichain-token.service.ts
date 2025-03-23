@@ -58,7 +58,11 @@ export class CreateOmnichainTokenService {
       // Encode the function call with parameters
       const encodedData = tokenFactoryInterface.encodeFunctionData(
         EJobs.CREATE_OMNICHAIN_TOKEN,
-        [components.tokenName, components.symbol, components.amount]
+        [
+          `${components.tokenName} | Omnichain`,
+          components.symbol,
+          components.amount,
+        ]
       )
 
       await this.privy.walletApi.ethereum.sendTransaction({

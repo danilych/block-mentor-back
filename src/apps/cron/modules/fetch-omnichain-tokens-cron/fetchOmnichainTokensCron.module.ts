@@ -7,4 +7,4 @@ import { drizzleProvider } from '../../../api/modules/drizzle/drizzle.provider'
   imports: [ConfigModule],
   providers: [...drizzleProvider, FetchTokensCronService],
 })
-export class FetchTokensCronModule {}
+export class FetchOmnichainTokensCronModule {}

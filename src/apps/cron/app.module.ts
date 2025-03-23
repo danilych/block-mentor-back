@@ -7,6 +7,7 @@ import { configNames } from 'src/common/constants/configNames'
 import { IAppConfig } from '../../common/config/appConfig'
 import { FetchVestingsCronModule } from './modules/fetch-vestings-cron/fetchVestingsCron.module'
 import { ScheduleModule } from '@nestjs/schedule'
+import { FetchOmnichainTokensCronModule } from './modules/fetch-omnichain-tokens-cron/fetchOmnichainTokensCron.module'
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ScheduleModule } from '@nestjs/schedule'
     }),
     FetchTokensCronModule,
     FetchVestingsCronModule,
+    FetchOmnichainTokensCronModule,
   ],
 })
 export class AppModule {}

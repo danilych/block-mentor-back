@@ -38,6 +38,7 @@ interface DbToken {
   ticker: string
   owner: string
   token_address: string
+  base_address?: string
 }
 
 @Injectable()
@@ -92,26 +93,27 @@ export class FetchTokensCronService {
 
       const query = `
         query MyQuery {
-          tokenCreateds(where: {blockNumber_gt: ${lastBlockNumber}}) {
-          blockNumber
-          blockTimestamp
-          initialAmount
-          name
-          owner
-          ticker
-          token
-          transactionHash
-          }
+        omnichainTokenCreateds(where: {blockNumber_gt: "${lastBlockNumber}"}) {
+        blockNumber
+        initialAmount
+        name
+        owner
+        ticker
+        token
       }
+    }
       `
 
-      const response = await fetch(this.graphQlEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
-      })
+      const response = await fetch(
+        'https://api.studio.thegraph.com/query/107388/block-mentor-base/version/latest',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ query }),
+        }
+      )
 
       const result = (await response.json()) as GraphQLResponse
       const fetchedTokens = result.data?.tokenCreateds || []
@@ -133,6 +135,30 @@ export class FetchTokensCronService {
         owner: token.owner.toLowerCase(),
         token_address: token.token.toLowerCase(),
       }))
+
+      for (const token of tokensForDb) {
+        const query2 = `
+        query MyQuery {
+        omnichainTokenCreated
+        omnichainTokenCreateds(where: {name: ${token.name}}) {
+        token
+        }
+      }
+      `
+
+        const responseV2 = await fetch(this.graphQlEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ query2 }),
+        })
+
+        const resultV2 = (await responseV2.json()) as GraphQLResponse
+        const fetchedTokensV2 = resultV2.data?.tokenCreateds || []
+
+        token.base_address = fetchedTokensV2[0]?.token
+      }
 
       // If we got new tokens, update the last checked block
       if (fetchedTokens.length > 0) {

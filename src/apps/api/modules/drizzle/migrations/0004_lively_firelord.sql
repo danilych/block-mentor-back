@@ -1,0 +1,1 @@
+ALTER TYPE "public"."last_checked_block_type" ADD VALUE 'OMNICHAIN_TOKENS_FETCH';
