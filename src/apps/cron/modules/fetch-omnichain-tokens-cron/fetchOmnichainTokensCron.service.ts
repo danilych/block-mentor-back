@@ -83,7 +83,7 @@ export class FetchOmnichainTokensCronService {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async fetchTokens(): Promise<TokenCreated[] | null> {
     this.logger.log('Fetching tokens')
 
