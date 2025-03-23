@@ -73,7 +73,7 @@ export class CreateVestingService {
         caip2: `eip155:${ESupportedChains[components.chain]}`,
         transaction: {
           value: Number(0),
-          chainId: ESupportedChains[components.chain],
+          chainId: +ESupportedChains[components.chain],
           to: components.tokenAddress,
           data: encodedApproveData,
         },

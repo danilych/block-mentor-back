@@ -1,6 +1,10 @@
 import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
-import { CREATE_TOKEN, CREATE_VESTING } from 'src/common/constants/queues'
+import {
+  CREATE_OMNICHAIN_TOKEN,
+  CREATE_TOKEN,
+  CREATE_VESTING,
+} from 'src/common/constants/queues'
 import { OpenAiService } from './openai.service'
 import { QueueDispatcherService } from './queue-dispatcher/queue-dispatcher.service'
 
@@ -13,6 +17,9 @@ import { QueueDispatcherService } from './queue-dispatcher/queue-dispatcher.serv
     }),
     BullModule.registerQueue({
       name: CREATE_VESTING,
+    }),
+    BullModule.registerQueue({
+      name: CREATE_OMNICHAIN_TOKEN,
     }),
   ],
 })

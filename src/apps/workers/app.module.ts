@@ -5,6 +5,7 @@ import appConfig, { IAppConfig } from '../../common/config/appConfig'
 import { BullModule } from '@nestjs/bull'
 import { CreateTokenModule } from './modules/create-token/create-token.module'
 import { CreateVestingModule } from './modules/create-vesting/create-vesting.module'
+import { CreateOmnichainTokenModule } from './modules/create-omnichain-token/create-omnichain-token.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CreateVestingModule } from './modules/create-vesting/create-vesting.mod
     }),
     CreateTokenModule,
     CreateVestingModule,
+    CreateOmnichainTokenModule,
   ],
 })
 export class AppModule {}
