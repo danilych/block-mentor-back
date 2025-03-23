@@ -6,6 +6,7 @@ import { BullModule } from '@nestjs/bull'
 import { configNames } from 'src/common/constants/configNames'
 import { IAppConfig } from '../../common/config/appConfig'
 import { FetchVestingsCronModule } from './modules/fetch-vestings-cron/fetchVestingsCron.module'
+import { ScheduleModule } from '@nestjs/schedule'
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { FetchVestingsCronModule } from './modules/fetch-vestings-cron/fetchVest
       load: [appConfig],
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
