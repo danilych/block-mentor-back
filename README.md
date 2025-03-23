@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://block-mentor.io" target="blank"><img src="./assets/logo.png" width="120" alt="Block Mentor Logo" /></a>
+  <a href="https://block-mentor.io" target="blank"><img src="./assets/logo.png" width="240" alt="Block Mentor Logo" /></a>
 </p>
 
 <p align="center">BlockMentor - Your Web3 AI Assistant</p>
