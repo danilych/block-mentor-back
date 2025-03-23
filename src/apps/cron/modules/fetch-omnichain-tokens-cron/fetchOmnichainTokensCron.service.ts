@@ -116,10 +116,10 @@ export class FetchTokensCronService {
       )
 
       const result = (await response.json()) as GraphQLResponse
-      const fetchedTokens = result.data?.tokenCreateds || []
+      const fetchedTokens = result.data?.omnichainTokenCreateds || []
 
       if (fetchedTokens.length === 0) {
-        this.logger.debug('No new tokens found')
+        this.logger.debug('No new omnichain tokens found')
         return null
       }
 
