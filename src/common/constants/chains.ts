@@ -1,2 +1,4 @@
-export const arbitrumSepolia = 421614
-export const baseSepolia = 84532
+export enum ESupportedChains {
+  arbitrum = '421614',
+  base = '84532',
+}

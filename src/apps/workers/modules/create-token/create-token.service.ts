@@ -5,26 +5,21 @@ import { PrivyClient } from '@privy-io/server-auth'
 import { Job } from 'bull'
 import { ethers } from 'ethers'
 import { TOKEN_FACTORY_ABI } from 'src/common/abi/token-factory-abi'
-import { arbitrumSepolia } from 'src/common/constants/chains'
-import { arbitrumTokenFactoryAddress } from 'src/common/constants/contractDeployments'
+import { ESupportedChains } from 'src/common/constants/chains'
+import { EContractDeployments } from 'src/common/constants/contractDeployments'
 import { EJobs } from 'src/common/constants/jobs_type'
 import { CREATE_TOKEN } from 'src/common/constants/queues'
 
 export interface TokenComponents {
-  name: string
+  tokenName: string
   symbol: string
-  initialSupply: string
+  amount: string
   network: string
 }
 
 interface AppConfig {
   privyId: string
   privySecret: string
-}
-
-enum ESupportedChains {
-  arbitrum = '421614',
-  base = '84532',
 }
 
 @Processor({ name: CREATE_TOKEN })
@@ -56,7 +51,7 @@ export class CreateTokenService {
       }
 
       this.logger.log(
-        `Creating token: ${components.name} (${components.symbol}) with supply ${components.initialSupply}`
+        `Creating token: ${components.tokenName} (${components.symbol}) with supply ${components.amount}`
       )
 
       // Create interface from ABI for encoding function data
@@ -65,18 +60,18 @@ export class CreateTokenService {
       // Encode the function call with parameters
       const encodedData = tokenFactoryInterface.encodeFunctionData(
         EJobs.CREATE_TOKEN,
-        [components.name, components.symbol, components.initialSupply]
+        [components.tokenName, components.symbol, components.amount]
       )
 
       const signedTransaction =
         await this.privy.walletApi.ethereum.sendTransaction({
           address: userWalletAddress,
           chainType: 'ethereum',
-          caip2: `eip155:${arbitrumSepolia}`,
+          caip2: `eip155:${ESupportedChains[components.network]}`,
           transaction: {
             value: Number(0),
             chainId: ESupportedChains[components.network],
-            to: arbitrumTokenFactoryAddress,
+            to: EContractDeployments[components.network],
             data: encodedData,
           },
         })
