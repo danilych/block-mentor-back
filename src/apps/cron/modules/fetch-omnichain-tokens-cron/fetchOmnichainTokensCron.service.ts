@@ -155,7 +155,7 @@ export class FetchOmnichainTokensCronService {
         })
 
         const resultV2 = (await responseV2.json()) as GraphQLResponse
-        const fetchedTokensV2 = resultV2.data?.tokenCreateds || []
+        const fetchedTokensV2 = resultV2.data?.omnichainTokenCreateds || []
 
         token.base_address = fetchedTokensV2[0]?.token
       }
