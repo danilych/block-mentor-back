@@ -168,7 +168,7 @@ export class FetchOmnichainTokensCronService {
             return parseInt(w.blockNumber)
           })
         )
-
+        console.log(tokensForDb)
         await this.updateLastCheckedBlock(latestBlock.toString())
       }
 
