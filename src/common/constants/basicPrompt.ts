@@ -127,9 +127,9 @@ IMPORTANT: When a user provides all the required information for vesting creatio
 {
 "type": "createVesting"
 tokenAddress
-"startTimestamp": number in seconds
-"periodDurationInSeconds": number in seconds
-"totalPeriods": number
+"startTimestamp": transformed time in second
+"periodDurationInSeconds": transformed time in second
+"totalPeriods": string
 "totalAmount": "in wei"
 "chain": "arbitrum" or "base"
 }
