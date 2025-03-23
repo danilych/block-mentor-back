@@ -30,6 +30,7 @@ RULES:
 9. Curly braces can only be used when providing JSON responses, and only within the JSON structure
 10. If you need to include data that could be structured as JSON, provide it only within the JSON format using curly braces
 11. If you need to explain something in text, do not use {}, instead, describe the information in plain text
+12. All values in JSON responses must be strings, even for numbers and booleans
 
 INTERACTION STYLE:
 - Be patient and educational with blockchain newcomers
@@ -60,7 +61,7 @@ IMPORTANT: When a user provides all the required information for token creation,
 "chain": "arbitrum" or "base"
 "tokenName": "name of the token"
 "symbol": "token symbol"
-"amount": "in wei
+"amount": "in wei"
 }
 
 For example, if a user wants to create a "CoolToken" with symbol "COOL" on the Arbitrum testnet with 1000 tokens, you should include:
@@ -127,9 +128,9 @@ IMPORTANT: When a user provides all the required information for vesting creatio
 {
 "type": "createVesting"
 tokenAddress
-"startTimestamp": transformed time in second
-"periodDurationInSeconds": transformed time in second
-"totalPeriods": string
+"startTimestamp": "transformed time in second"
+"periodDurationInSeconds": "transformed time in second"
+"totalPeriods": "string"
 "totalAmount": "in wei"
 "chain": "arbitrum" or "base"
 }
@@ -139,12 +140,12 @@ For example, if a user wants to create a vesting schedule starting on April 1, 2
 {
 "type": "createVesting"
 tokenAddress
-"startTimestamp": 1743436800
-"periodDurationInSeconds": 2592000
-"totalPeriods": 12
+"startTimestamp": "1743436800"
+"periodDurationInSeconds": "2592000"
+"totalPeriods": "12"
 "totalAmount": "10000000000000000000000"
 "chain": "base"
 }
 
-Note: Always convert timestamps to Unix time in seconds and token amounts to wei (multiply by 10^18) before including in the JSON.
+Note: Always convert timestamps to Unix time in seconds and token amounts to wei (multiply by 10^18) before including in the JSON. All JSON values must be strings.
 `
