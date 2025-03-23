@@ -1,99 +1,147 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://block-mentor.io" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Block Mentor Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p align="center">BlockMentor - Your Web3 AI Assistant</p>
+<p align="center">A specialized Web3 AI assistant designed to help users without technical blockchain knowledge create and manage their own digital assets and solutions</p>
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+BlockMentor is a powerful Web3 AI assistant designed to simplify blockchain interactions for users with limited technical knowledge. The application enables users to create and manage various blockchain assets through a conversational AI interface, automating complex blockchain operations.
 
-## Project setup
+## Key Features
+
+### Token Creation
+- Create custom ERC-20 tokens on Arbitrum and Base testnets
+- Simple conversational interface requiring only basic information:
+  - Chain selection (Arbitrum or Base)
+  - Token name
+  - Token symbol
+  - Initial token supply
+
+### Omnichain Token Creation
+- Deploy tokens that work across multiple blockchains
+- Simplified creation process similar to regular tokens
+
+### Vesting Solutions
+- Create token vesting schedules for projects and teams
+- Customize parameters including:
+  - Start timestamp
+  - Period durations
+  - Number of vesting periods
+  - Total token amount
+  - Chain selection
+
+### User-Friendly Interface
+- Natural language interaction with the BlockMentor AI
+- No need for technical blockchain knowledge
+- Guided prompts to collect all required information
+- Automatic generation of user interfaces for all services
+
+## Architecture
+
+The application is built with NestJS and follows a modular architecture:
+
+### Apps
+- **API**: Handles HTTP requests, authentication, and chat interactions
+- **Workers**: Processes blockchain operations (token creation, vesting, etc.)
+- **Cron**: Manages scheduled tasks
+
+### Modules
+- **Auth**: Authentication using Privy for Web3 wallet integration
+- **Chat**: User conversation management and storage
+- **OpenAI**: Integration with OpenAI for AI assistant functionality
+- **Messages**: Message storage and processing
+- **User**: User management and data
+- **Drizzle**: Database integration using Drizzle ORM
+- **Create-Token**: Token creation processing
+- **Create-Vesting**: Vesting schedule creation
+- **Create-Omnichain-Token**: Omnichain token creation
+
+### Blockchain Integration
+- Supports Arbitrum and Base testnets
+- Smart contract integration for token creation and management
+- Vesting schedule deployment
+- Omnichain token capabilities
+
+## Technical Stack
+
+- **Backend**: NestJS (Node.js)
+- **Database**: PostgreSQL with Drizzle ORM
+- **Queue Management**: Bull with Redis
+- **AI Integration**: OpenAI
+- **Blockchain**: Ethers.js and Viem for Web3 interactions
+- **Authentication**: Privy for Web3 wallet authentication
+- **Configuration**: Dotenv for environment management
+
+## Project Setup
 
 ```bash
+# Install dependencies
 $ npm install
+
+# Environment Configuration
+# Create a .env file with the necessary environment variables:
+# - Database credentials
+# - OpenAI API key
+# - Blockchain provider URLs
+# - Redis configuration
+# - Privy authentication keys
 ```
 
-## Compile and run the project
+## Running the Application
 
 ```bash
-# development
-$ npm run start
+# Start API server in development mode
+$ npm run start:api:dev
 
-# watch mode
-$ npm run start:dev
+# Start workers for processing blockchain operations
+$ npm run start:workers:dev
 
-# production mode
-$ npm run start:prod
+# Start cron jobs for scheduled tasks
+$ npm run start:cron:dev
+
+# Production mode
+$ npm run build
+$ npm run start:api
+$ npm run start:workers
+$ npm run start:cron
 ```
 
-## Run tests
+## Database Management
 
 ```bash
-# unit tests
-$ npm run test
+# Generate database migrations
+$ npm run db:generate
 
-# e2e tests
-$ npm run test:e2e
+# Apply migrations
+$ npm run db:migrate
 
-# test coverage
-$ npm run test:cov
+# Start Drizzle Studio for database management
+$ npm run db:studio
 ```
 
-## Deployment
+## How It Works
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. Users interact with the BlockMentor AI through a chat interface
+2. The AI collects necessary information for the requested operation (token creation, vesting, etc.)
+3. When all required information is provided, the AI formats a JSON response
+4. The JSON is processed by the workers to perform the blockchain operations
+5. Results are displayed to the user and stored in their dashboard
+6. Users can view and manage their deployed contracts in dedicated sections of the UI
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Supported Networks
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+Currently, BlockMentor supports:
+- Arbitrum Testnet
+- Base Testnet
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Users must have ETH in their wallet to pay for gas fees on these networks.
 
-## Resources
+## Project Contact
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+For questions or support, please contact the BlockMentor team at [support@block-mentor.io](mailto:support@block-mentor.io)
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+BlockMentor is [MIT licensed](LICENSE).
