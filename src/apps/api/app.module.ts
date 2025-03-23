@@ -26,6 +26,7 @@ import { UserModule } from './modules/user/user.module'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const { bull } = configService.getOrThrow<IAppConfig>(configNames.APP)
+        console.log('bull api', bull)
 
         return {
           redis: {

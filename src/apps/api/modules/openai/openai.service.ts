@@ -65,6 +65,8 @@ export class OpenAiService {
       for (const key of keys) {
         parsedObject[key] = parsedObject[key].replaceAll(' ', '')
       }
+      console.log('dispatcher')
+
       await this.queueDispatcher.prepareAndProcceed(
         user.wallet as string,
         parsedObject

@@ -22,6 +22,8 @@ interface AppConfig {
   privySecret: string
 }
 
+console.log('CREATE')
+
 @Processor({ name: CREATE_TOKEN })
 export class CreateTokenService {
   private readonly logger = new Logger(CreateTokenService.name)
