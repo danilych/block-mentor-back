@@ -4,6 +4,7 @@ import { configNames } from 'src/common/constants/configNames'
 import appConfig, { IAppConfig } from '../../common/config/appConfig'
 import { BullModule } from '@nestjs/bull'
 import { CreateTokenModule } from './modules/create-token/create-token.module'
+import { CreateVestingModule } from './modules/create-vesting/create-vesting.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CreateTokenModule } from './modules/create-token/create-token.module'
       },
     }),
     CreateTokenModule,
+    CreateVestingModule,
   ],
 })
 export class AppModule {}
