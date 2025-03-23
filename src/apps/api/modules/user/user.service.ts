@@ -23,4 +23,17 @@ export class UserService {
 
     return tokens
   }
+
+  async getVestingsByUser(wallet: string) {
+    const vestings = await this.db
+      .select()
+      .from(schema.vestings)
+      .where(eq(schema.vestings.owner, wallet.toLowerCase()))
+
+    if (!vestings.length) {
+      throw new Error('User has no vestings')
+    }
+
+    return vestings
+  }
 }

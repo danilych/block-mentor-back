@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { GetTokensByUserDto } from './dto/get-tokens-by-user.dto'
+import { GetVestingsByUserDto } from './dto/get-vestings-by-user.dto'
 
 @Controller('user')
 export class UserController {
@@ -21,6 +22,19 @@ export class UserController {
         error instanceof Error
           ? error.message
           : 'An error occurred while fetching user tokens'
+      throw new HttpException(errorMessage, HttpStatus.NOT_FOUND)
+    }
+  }
+
+  @Get('vestings/:wallet')
+  async getVestingsByUser(@Param() params: GetVestingsByUserDto) {
+    try {
+      return await this.userService.getVestingsByUser(params.wallet)
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while fetching user vestings'
       throw new HttpException(errorMessage, HttpStatus.NOT_FOUND)
     }
   }
