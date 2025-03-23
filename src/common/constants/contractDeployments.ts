@@ -1,5 +1,5 @@
 export enum ETokenFactoryDeployments {
-  arbitrum = '0xbd39A7fAbBc9D92df06d93B226C62EA820CCf325',
+  arbitrum = '0x114b314f3925a681ed729743b31f92dd157Ff2c5',
 }
 
 export enum ETokenVestingFactoryDeployments {
