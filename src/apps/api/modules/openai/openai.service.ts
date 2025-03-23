@@ -60,9 +60,14 @@ export class OpenAiService {
       .replaceAll('\n', '')
 
     try {
+      const parsedObject = JSON.parse(jsonString)
+      const keys = Object.keys(parsedObject)
+      for (const key of keys) {
+        parsedObject[key] = parsedObject[key].replaceAll(' ', '')
+      }
       await this.queueDispatcher.prepareAndProcceed(
         user.wallet as string,
-        JSON.parse(jsonString)
+        parsedObject
       )
     } catch (err) {
       this.logger.log(`Error to procced queues ${JSON.stringify(err.message)}`)
