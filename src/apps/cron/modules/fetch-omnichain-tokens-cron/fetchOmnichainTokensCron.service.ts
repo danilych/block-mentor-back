@@ -60,7 +60,7 @@ export class FetchTokensCronService {
       const result = await this.db
         .select({ blockNumber: schema.lastCheckedBlocks.blockNumber })
         .from(schema.lastCheckedBlocks)
-        .where(eq(schema.lastCheckedBlocks.type, 'TOKENS_FETCH'))
+        .where(eq(schema.lastCheckedBlocks.type, 'OMNICHAIN_TOKENS_FETCH'))
         .limit(1)
 
       if (result.length > 0) {
@@ -71,7 +71,7 @@ export class FetchTokensCronService {
       }
 
       await this.db.insert(schema.lastCheckedBlocks).values({
-        type: 'TOKENS_FETCH',
+        type: 'OMNICHAIN_TOKENS_FETCH',
         blockNumber: '0',
       })
 
@@ -193,13 +193,13 @@ export class FetchTokensCronService {
       const updateResult = await this.db
         .update(schema.lastCheckedBlocks)
         .set({ blockNumber })
-        .where(eq(schema.lastCheckedBlocks.type, 'TOKENS_FETCH'))
+        .where(eq(schema.lastCheckedBlocks.type, 'OMNICHAIN_TOKENS_FETCH'))
         .returning()
 
       // If no record was updated, insert a new one
       if (updateResult.length === 0) {
         await this.db.insert(schema.lastCheckedBlocks).values({
-          type: 'TOKENS_FETCH',
+          type: 'OMNICHAIN_TOKENS_FETCH',
           blockNumber,
         })
         this.logger.debug(
