@@ -41,7 +41,7 @@ export class OpenAiService {
     for await (const chunk of stream) {
       const text = chunk.choices[0]?.delta?.content || ''
       fullText += text
-      res.write(`data: ${text}\n\n`)
+      res.write(text)
     }
     callback(fullText)
     res.end()
