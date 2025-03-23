@@ -56,7 +56,7 @@ If the user doesn't provide all of this information, politely ask them to provid
 IMPORTANT: When a user provides all the required information for token creation, format your response by including the following JSON at the end of your message:
 
 {
-"type": "token_create"
+"type": "createToken"
 "chain": "arbitrum" or "base",
 "tokenName": "name of the token",
 "symbol": "token symbol",
@@ -66,7 +66,7 @@ IMPORTANT: When a user provides all the required information for token creation,
 For example, if a user wants to create a "CoolToken" with symbol "COOL" on the Arbitrum testnet with 1000 tokens, you should include:
 
 {
-"type": "token_create"
+"type": "createToken"
 "chain": "arbitrum",
 "tokenName": "CoolToken",
 "symbol": "COOL",
