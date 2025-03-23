@@ -40,10 +40,18 @@ export class OpenAiService {
     })
     for await (const chunk of stream) {
       const text = chunk.choices[0]?.delta?.content || ''
+
       fullText += text
       res.write(`data: ${text}\n\n`)
     }
     callback(fullText)
     res.end()
+
+    const jsonStringStartIdx = fullText.indexOf('{')
+    const jsonStringEndIdx = fullText.indexOf('}')
+    const jsonString = fullText
+      .slice(jsonStringStartIdx, jsonStringEndIdx + 1)
+      .replaceAll('\n', '')
+    const objectToProceed = JSON.parse(jsonString)
   }
 }
