@@ -1,0 +1,1 @@
+ALTER TYPE "public"."last_checked_block_type" ADD VALUE 'VESTINGS_FETCH';

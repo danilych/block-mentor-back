@@ -15,6 +15,13 @@
       "when": 1742688502694,
       "tag": "0001_tough_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742707563874,
+      "tag": "0002_outgoing_tyrannus",
+      "breakpoints": true
     }
   ]
 }

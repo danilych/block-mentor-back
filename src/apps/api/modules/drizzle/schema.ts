@@ -10,6 +10,7 @@ import { relations } from 'drizzle-orm'
 
 export const lastCheckedBlockType = pgEnum('last_checked_block_type', [
   'TOKENS_FETCH',
+  'VESTINGS_FETCH',
 ])
 
 export const messageRoles = pgEnum('message_roles', [
