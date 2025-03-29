@@ -7,9 +7,16 @@ import {
 } from 'src/common/constants/queues'
 import { OpenAiService } from './openai.service'
 import { QueueDispatcherService } from './queue-dispatcher/queue-dispatcher.service'
+import { UserService } from '../user/user.service'
+import { drizzleProvider } from '../drizzle/drizzle.provider'
 
 @Module({
-  providers: [OpenAiService, QueueDispatcherService],
+  providers: [
+    OpenAiService,
+    QueueDispatcherService,
+    UserService,
+    ...drizzleProvider,
+  ],
   exports: [OpenAiService, QueueDispatcherService],
   imports: [
     BullModule.registerQueue({

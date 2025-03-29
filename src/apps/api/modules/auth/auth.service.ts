@@ -37,7 +37,7 @@ export class AuthService {
       )
 
       return {
-        email: user.email?.address || undefined,
+        email: user.email?.address || user.google?.email || undefined,
         defaultWalletAddress: defaultWallet
           ? defaultWallet['address']
           : undefined,
