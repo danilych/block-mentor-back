@@ -9,12 +9,16 @@ import { OpenAiService } from './openai.service'
 import { QueueDispatcherService } from './queue-dispatcher/queue-dispatcher.service'
 import { UserService } from '../user/user.service'
 import { drizzleProvider } from '../drizzle/drizzle.provider'
+import { PromptService } from './prompt/prompt.service'
+import { JsonProcessorService } from './json-processor/json-processor.service'
 
 @Module({
   providers: [
     OpenAiService,
     QueueDispatcherService,
     UserService,
+    PromptService,
+    JsonProcessorService,
     ...drizzleProvider,
   ],
   exports: [OpenAiService, QueueDispatcherService],
